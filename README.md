@@ -1,8 +1,7 @@
 
   # ISMS Web Tool Mockup
 
-  This is a code bundle for ISMS Web Tool Mockup. The original project is available at https://www.figma.com/design/fq3XIojHDfscU6VCSb1Ygo/ISMS-Web-Tool-Mockup.
-
+  This is a code bundle for ISMS Web Tool Manzen . It is a lite ISMS implementation to enable Security Audit for small organizations with simpler structure and smaller team size.
   ## Running the code
 
   Run `npm i` to install the dependencies.
