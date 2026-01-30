@@ -1,0 +1,155 @@
+import { PageTemplate } from "@/app/components/PageTemplate";
+import { Card } from "@/app/components/ui/card";
+import { Button } from "@/app/components/ui/button";
+import { 
+  Shield, 
+  AlertTriangle, 
+  CheckCircle, 
+  Clock, 
+  TrendingUp,
+  FileText,
+  Users,
+  Activity
+} from "lucide-react";
+
+export function HomePage() {
+  const stats = [
+    { label: "Active Controls", value: "156", change: "+12", icon: Shield, color: "text-blue-600" },
+    { label: "Open Risks", value: "8", change: "-3", icon: AlertTriangle, color: "text-red-600" },
+    { label: "Compliance Score", value: "94%", change: "+2%", icon: CheckCircle, color: "text-green-600" },
+    { label: "Pending Tasks", value: "23", change: "-5", icon: Clock, color: "text-orange-600" },
+  ];
+
+  const recentActivity = [
+    { action: "SOC 2 Type II audit completed", time: "2 hours ago", status: "success" },
+    { action: "New vulnerability detected in API service", time: "5 hours ago", status: "warning" },
+    { action: "Policy updated: Data Retention Policy", time: "1 day ago", status: "info" },
+    { action: "Risk assessment approved by CFO", time: "2 days ago", status: "success" },
+  ];
+
+  return (
+    <PageTemplate
+      title="Dashboard"
+      description="Welcome back! Here's an overview of your security posture."
+    >
+      <div className="space-y-6">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {stats.map((stat) => {
+            const Icon = stat.icon;
+            return (
+              <Card key={stat.label} className="p-6">
+                <div className="flex items-center justify-between mb-2">
+                  <Icon className={`w-8 h-8 ${stat.color}`} />
+                  <span className="text-sm text-green-600 font-medium">{stat.change}</span>
+                </div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
+                <div className="text-sm text-gray-600">{stat.label}</div>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Compliance Overview */}
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">Compliance Overview</h2>
+              <Button variant="outline" size="sm">View All</Button>
+            </div>
+            <div className="space-y-4">
+              {[
+                { framework: "SOC 2 Type II", progress: 94, status: "In Progress" },
+                { framework: "ISO 27001", progress: 100, status: "Certified" },
+                { framework: "GDPR", progress: 88, status: "In Progress" },
+                { framework: "HIPAA", progress: 72, status: "In Progress" },
+              ].map((item) => (
+                <div key={item.framework}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">{item.framework}</span>
+                    <span className="text-xs text-gray-500">{item.progress}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-600 h-2 rounded-full transition-all"
+                      style={{ width: `${item.progress}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Recent Activity */}
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
+              <Activity className="w-5 h-5 text-gray-400" />
+            </div>
+            <div className="space-y-4">
+              {recentActivity.map((activity, index) => (
+                <div key={index} className="flex gap-3">
+                  <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                    activity.status === 'success' ? 'bg-green-500' :
+                    activity.status === 'warning' ? 'bg-orange-500' :
+                    'bg-blue-500'
+                  }`} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-gray-900">{activity.action}</p>
+                    <p className="text-xs text-gray-500">{activity.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Risk Overview */}
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">Risk Distribution</h2>
+              <TrendingUp className="w-5 h-5 text-gray-400" />
+            </div>
+            <div className="space-y-3">
+              {[
+                { level: "Critical", count: 2, color: "bg-red-500" },
+                { level: "High", count: 6, color: "bg-orange-500" },
+                { level: "Medium", count: 15, color: "bg-yellow-500" },
+                { level: "Low", count: 28, color: "bg-green-500" },
+              ].map((risk) => (
+                <div key={risk.level} className="flex items-center gap-3">
+                  <div className={`w-3 h-3 rounded-full ${risk.color}`} />
+                  <span className="text-sm text-gray-700 flex-1">{risk.level}</span>
+                  <span className="text-sm font-semibold text-gray-900">{risk.count}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-2 gap-3">
+              <Button variant="outline" className="h-auto py-4 flex flex-col gap-2">
+                <FileText className="w-5 h-5" />
+                <span className="text-sm">New Policy</span>
+              </Button>
+              <Button variant="outline" className="h-auto py-4 flex flex-col gap-2">
+                <Shield className="w-5 h-5" />
+                <span className="text-sm">Run Test</span>
+              </Button>
+              <Button variant="outline" className="h-auto py-4 flex flex-col gap-2">
+                <AlertTriangle className="w-5 h-5" />
+                <span className="text-sm">Report Risk</span>
+              </Button>
+              <Button variant="outline" className="h-auto py-4 flex flex-col gap-2">
+                <Users className="w-5 h-5" />
+                <span className="text-sm">Add Vendor</span>
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </PageTemplate>
+  );
+}
