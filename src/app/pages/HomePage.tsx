@@ -1,6 +1,7 @@
 import { PageTemplate } from "@/app/components/PageTemplate";
 import { Card } from "@/app/components/ui/card";
 import { Button } from "@/app/components/ui/button";
+import { useNavigate } from "react-router";
 import { 
   Shield, 
   AlertTriangle, 
@@ -13,11 +14,13 @@ import {
 } from "lucide-react";
 
 export function HomePage() {
+  const navigate = useNavigate();
+  
   const stats = [
-    { label: "Active Controls", value: "156", change: "+12", icon: Shield, color: "text-blue-600" },
-    { label: "Open Risks", value: "8", change: "-3", icon: AlertTriangle, color: "text-red-600" },
-    { label: "Compliance Score", value: "94%", change: "+2%", icon: CheckCircle, color: "text-green-600" },
-    { label: "Pending Tasks", value: "23", change: "-5", icon: Clock, color: "text-orange-600" },
+    { label: "Active Controls", value: "156", change: "+12", icon: Shield, color: "text-blue-600", path: "/compliance/controls" },
+    { label: "Open Risks", value: "8", change: "-3", icon: AlertTriangle, color: "text-red-600", path: "/risk/risks" },
+    { label: "Compliance Score", value: "94%", change: "+2%", icon: CheckCircle, color: "text-green-600", path: "/compliance/frameworks" },
+    { label: "Pending Tasks", value: "23", change: "-5", icon: Clock, color: "text-orange-600", path: "/tests" },
   ];
 
   const recentActivity = [
@@ -38,7 +41,11 @@ export function HomePage() {
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
-              <Card key={stat.label} className="p-6">
+              <Card 
+                key={stat.label} 
+                className="p-6 cursor-pointer hover:shadow-md transition-shadow duration-200"
+                onClick={() => navigate(stat.path)}
+              >
                 <div className="flex items-center justify-between mb-2">
                   <Icon className={`w-8 h-8 ${stat.color}`} />
                   <span className="text-sm text-green-600 font-medium">{stat.change}</span>
@@ -56,7 +63,13 @@ export function HomePage() {
           <Card className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900">Compliance Overview</h2>
-              <Button variant="outline" size="sm">View All</Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate("/compliance/frameworks")}
+              >
+                View All
+              </Button>
             </div>
             <div className="space-y-4">
               {[
@@ -105,7 +118,7 @@ export function HomePage() {
           </Card>
 
           {/* Risk Overview */}
-          <Card className="p-6">
+          <Card className="p-6 cursor-pointer hover:shadow-md transition-shadow duration-200" onClick={() => navigate("/risk/risks")}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900">Risk Distribution</h2>
               <TrendingUp className="w-5 h-5 text-gray-400" />
@@ -130,19 +143,35 @@ export function HomePage() {
           <Card className="p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
             <div className="grid grid-cols-2 gap-3">
-              <Button variant="outline" className="h-auto py-4 flex flex-col gap-2">
+              <Button 
+                variant="outline" 
+                className="h-auto py-4 flex flex-col gap-2"
+                onClick={() => navigate("/compliance/policies")}
+              >
                 <FileText className="w-5 h-5" />
                 <span className="text-sm">New Policy</span>
               </Button>
-              <Button variant="outline" className="h-auto py-4 flex flex-col gap-2">
+              <Button 
+                variant="outline" 
+                className="h-auto py-4 flex flex-col gap-2"
+                onClick={() => navigate("/tests")}
+              >
                 <Shield className="w-5 h-5" />
                 <span className="text-sm">Run Test</span>
               </Button>
-              <Button variant="outline" className="h-auto py-4 flex flex-col gap-2">
+              <Button 
+                variant="outline" 
+                className="h-auto py-4 flex flex-col gap-2"
+                onClick={() => navigate("/reports")}
+              >
                 <AlertTriangle className="w-5 h-5" />
                 <span className="text-sm">Report Risk</span>
               </Button>
-              <Button variant="outline" className="h-auto py-4 flex flex-col gap-2">
+              <Button 
+                variant="outline" 
+                className="h-auto py-4 flex flex-col gap-2"
+                onClick={() => navigate("/vendors")}
+              >
                 <Users className="w-5 h-5" />
                 <span className="text-sm">Add Vendor</span>
               </Button>
