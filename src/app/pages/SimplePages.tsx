@@ -4,6 +4,7 @@ import { Button } from "@/app/components/ui/button";
 import { Card } from "@/app/components/ui/card";
 import { Plus } from "lucide-react";
 
+
 export function createSimplePage(title: string, description: string, columns: string[], rows: any[]) {
   return function Page() {
     return (
