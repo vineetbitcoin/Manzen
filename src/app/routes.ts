@@ -7,7 +7,7 @@ import { ReportsPage } from "@/app/pages/ReportsPage";
 
 // Compliance
 import { FrameworksPage } from "@/app/pages/compliance/FrameworksPage";
-import { ControlsPage } from "@/app/pages/compliance/ControlsPage";
+import { ControlsPage } from "@/app/pages/controls/ControlsPage";
 import { PoliciesPage } from "@/app/pages/compliance/PoliciesPage";
 import { DocumentsPage } from "@/app/pages/compliance/DocumentsPage";
 import { AuditsPage } from "@/app/pages/compliance/AuditsPage";
