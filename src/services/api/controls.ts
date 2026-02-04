@@ -7,8 +7,52 @@ import {
   Evidence
 } from './types';
 
+// Create unauthenticated client for POC
+class UnauthenticatedClient {
+  private baseURL: string;
+
+  constructor(baseURL: string = 'http://localhost:3000') {
+    this.baseURL = baseURL;
+  }
+
+  async request<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const url = `${this.baseURL}${endpoint}`;
+    
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    };
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+      });
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
+    let url = endpoint;
+    if (params) {
+      const searchParams = new URLSearchParams(params);
+      url += `?${searchParams.toString()}`;
+    }
+    return this.request<T>(url);
+  }
+}
+
+const unauthClient = new UnauthenticatedClient();
+
 export class ControlsService {
-  // Get all controls
+  // Get all controls (without authentication for POC)
   async getControls(params?: {
     page?: number;
     limit?: number;
@@ -16,7 +60,7 @@ export class ControlsService {
     search?: string;
     isoReference?: string;
   }): Promise<ApiResponse<Control[]>> {
-    return apiClient.get('/api/controls', params);
+    return unauthClient.get('/api/controls', params);
   }
 
   // Get control by ID

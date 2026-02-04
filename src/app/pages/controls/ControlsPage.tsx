@@ -55,7 +55,7 @@ export function ControlsPage() {
       const response = await controlsService.getControls(params);
       
       if (response.success && response.data) {
-        let filteredControls = response.data;
+        let filteredControls = response.data || [];
         
         // Apply sorting
         if (sortColumn) {
