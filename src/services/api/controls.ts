@@ -11,7 +11,7 @@ import {
 class UnauthenticatedClient {
   private baseURL: string;
 
-  constructor(baseURL: string = 'http://localhost:3000') {
+  constructor(baseURL: string = 'https://isms-backend-production.up.railway.app') {
     this.baseURL = baseURL;
   }
 
