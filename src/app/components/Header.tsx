@@ -1,18 +1,137 @@
 import { Bell, Search, Settings, HelpCircle } from "lucide-react";
 import { Badge } from "@/app/components/ui/badge";
+import { Input } from "@/app/components/ui/input";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router";
+
+interface SearchResult {
+  title: string;
+  path: string;
+  category: string;
+}
+
+const searchablePages: SearchResult[] = [
+  // Main pages
+  { title: "Dashboard", path: "/", category: "Main" },
+  { title: "My Work", path: "/my-work", category: "Main" },
+  { title: "Tests", path: "/tests", category: "Main" },
+  { title: "Reports", path: "/reports", category: "Main" },
+  
+  // Compliance
+  { title: "Frameworks", path: "/compliance/frameworks", category: "Compliance" },
+  { title: "Controls", path: "/compliance/controls", category: "Compliance" },
+  { title: "Policies", path: "/compliance/policies", category: "Compliance" },
+  { title: "Documents", path: "/compliance/documents", category: "Compliance" },
+  { title: "Audits", path: "/compliance/audits", category: "Compliance" },
+  
+  // Risk Management
+  { title: "Risk Overview", path: "/risk/overview", category: "Risk" },
+  { title: "Risks", path: "/risk/risks", category: "Risk" },
+  { title: "Risk Library", path: "/risk/library", category: "Risk" },
+  { title: "Action Tracker", path: "/risk/action-tracker", category: "Risk" },
+  { title: "Risk Snapshot", path: "/risk/snapshot", category: "Risk" },
+  
+  // Customer Trust
+  { title: "Trust Overview", path: "/customer-trust/overview", category: "Customer Trust" },
+  { title: "Trust Accounts", path: "/customer-trust/accounts", category: "Customer Trust" },
+  { title: "Trust Center", path: "/customer-trust/trust-center", category: "Customer Trust" },
+  { title: "Commitments", path: "/customer-trust/commitments", category: "Customer Trust" },
+  { title: "Knowledge Base", path: "/customer-trust/knowledge-base", category: "Customer Trust" },
+  
+  // Other
+  { title: "Vendors", path: "/vendors", category: "Operations" },
+  { title: "Data Inventory", path: "/privacy/data-inventory", category: "Privacy" },
+  { title: "Assets Inventory", path: "/assets/inventory", category: "Assets" },
+  { title: "Code Changes", path: "/assets/code-changes", category: "Assets" },
+  { title: "Vulnerabilities", path: "/assets/vulnerabilities", category: "Assets" },
+  { title: "People", path: "/personnel/people", category: "Personnel" },
+  { title: "Integrations", path: "/integrations", category: "Settings" },
+];
 
 export function Header() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredResults, setFilteredResults] = useState<SearchResult[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const navigate = useNavigate();
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (searchQuery.length >= 2) {
+      const filtered = searchablePages.filter(page =>
+        page.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        page.category.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredResults(filtered.slice(0, 8)); // Limit to 8 results
+      setShowSuggestions(true);
+    } else {
+      setFilteredResults([]);
+      setShowSuggestions(false);
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSearch = (path: string) => {
+    navigate(path);
+    setSearchQuery("");
+    setShowSuggestions(false);
+  };
+
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-3">
       <div className="flex items-center justify-between">
-        <div className="flex-1 max-w-xl">
+        <div className="flex-1 max-w-xl" ref={searchRef}>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 z-10" />
+            <Input
               type="text"
-              placeholder="Search..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Search pages..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && filteredResults.length > 0) {
+                  handleSearch(filteredResults[0].path);
+                }
+              }}
+              className="pl-10 pr-4"
             />
+            
+            {showSuggestions && filteredResults.length > 0 && (
+              <div className="absolute top-full mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
+                <div className="py-2">
+                  {filteredResults.map((result, index) => (
+                    <button
+                      key={index}
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center justify-between group transition-colors"
+                      onClick={() => handleSearch(result.path)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-gray-900 group-hover:text-blue-600">
+                            {result.title}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {result.category}
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-xs text-gray-400 group-hover:text-blue-600">
+                        {result.path}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
